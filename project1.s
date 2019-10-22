@@ -1,6 +1,6 @@
 .data
+	base: .word 23
 	sr1: .asciiz "Enter 10 characters: "
-
 
 .text ## Instructions section, goes in text segment.
 
