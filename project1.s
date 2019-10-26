@@ -2,11 +2,12 @@
 	base: .word 23
 	sr1: .asciiz "Enter 10 characters: "
 	userNumber: .space 11
+	result: .space 3 # The max number is 23*10, which is 230.
 
 .text # Instructions section, goes in text segment.
 
 main:
-	# PRINT SR1 #
+	# PRINT PROMPT #
     li $v0, 4 # System call to print a string.
 	la $a0, sr1 # Load string to be printed.
 	syscall # Print string.
@@ -16,6 +17,11 @@ main:
 	la $a0, userNumber # Where the string is saved.
 	li $a1, 11 # Max number of characters to read.
 	syscall
+	
+	# LOOP OVER MESSAGE #
+	add $t0, $t0, $zero # $t0 will be the iterator.
+messageLoop:
+	
 	
 	li $v0, 10 # Exit program system call.
 	syscall
