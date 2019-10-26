@@ -19,8 +19,14 @@ main:
 	syscall
 	
 	# LOOP OVER MESSAGE #
-	add $t0, $t0, $zero # $t0 will be the iterator.
+	la $s0, userNumber # The address of the string entered.
+	add $t0, $t0, $zero # $t0 will iterate over the characters.
 messageLoop:
+	add $s1, $s0, $t0 # mesage[i]
+	lb $s2, 0($s1) # Load the character into $s2.
+	
+	
+toLowercase: # Convert characters to their lowercase version.
 	
 	
 	li $v0, 10 # Exit program system call.
