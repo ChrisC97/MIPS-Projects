@@ -35,3 +35,9 @@ toLowercase: # Convert characters to their lowercase version.
 exit:
 	li $v0, 10 # Exit program system call.
 	syscall
+	
+## MESSAGE LOOP VARIABLES #
+## $s0 = The base address of the string we're iterating over.
+## St0 = The character index of the string.
+## $s1 = message[i]
+## $s2 = The character at message[i]
