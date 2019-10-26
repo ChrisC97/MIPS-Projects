@@ -24,10 +24,14 @@ main:
 messageLoop:
 	add $s1, $s0, $t0 # mesage[i]
 	lb $s2, 0($s1) # Load the character into $s2.
+	beq $s2, 0, exit # End of string, exit out.
+	jal toLowercase # Convert the character to lowercase.
+	addi $t0, $t0, 1 # i++
+	j messageLoop # Check the next character.
 	
-	
+	# CONVERT TO LOWERCASE #
 toLowercase: # Convert characters to their lowercase version.
-	
-	
+	jr $ra
+exit:
 	li $v0, 10 # Exit program system call.
 	syscall
