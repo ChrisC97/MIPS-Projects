@@ -44,11 +44,14 @@ isCharInRange:
 	blt $s2, 48, endCharCheck # Value is less that '0', ignore it.
 	bgt $s2, 90, endCharCheck # Value is more than 'Z', ignore it.
 	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
+	sub $s2, $s2, 48 # The value is between '0' and '9', make it values 0-9.
 endCharCheck:
 	jr $ra
 	
 checkIfIgnore:
 	blt $s2, 65, endCharCheck # Value is between '9' and 'A', ignore it.
+	sub $s2, $s2, 55 # The value is between 'A' and 'Z', make it values 10-35.
+	j endCharCheck 
 	
 	# END OF PROGRAM #
 endProgram:
