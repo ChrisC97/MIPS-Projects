@@ -45,8 +45,8 @@ checkIfIgnore:
 endCharCheck:
 	jr $ra
 	
-	# CONVERT TO LOWERCASE #
-toUppercase: # Convert characters to their lowercase version.
+	# CONVERT TO UPPERCASE #
+toUppercase: # Convert characters to their uppercase version.
 	blt $s2, 'a', toUppercaseEnd  # If less than a, return. No change needed.
 	bgt $s2, 'z', toUppercaseEnd  # If more than z, return. No change needed.
 	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
