@@ -2,11 +2,12 @@
 	base: .word 23
 	sr1: .asciiz "Enter 10 characters: "
 	userNumber: .space 11
-	result: .space 3 # The max number is 23*10, which is 230.
+	result: .word 0 # The max number is 23*10, which is 230.
 
 .text # Instructions section, goes in text segment.
 
 main:
+	sw $zero, result # set result to 0.
 	# PRINT PROMPT #
     li $v0, 4 # System call to print a string.
 	la $a0, sr1 # Load string to be printed.
@@ -27,7 +28,6 @@ messageLoop:
 	beq $s2, 0, endProgram # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
-	sub $s2, $s2, 48 # Make the char '0' the start of the table.
 	addi $t0, $t0, 1 # i++
 	j messageLoop # Check the next character.
 	
@@ -43,9 +43,19 @@ toUppercaseEnd:
 isCharInRange:
 	blt $s2, 48, endCharCheck # Value is less that '0', ignore it.
 	bgt $s2, 90, endCharCheck # Value is more than 'Z', ignore it.
+	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
 endCharCheck:
 	jr $ra
+	
+checkIfIgnore:
+	blt $s2, 65, endCharCheck # Value is between '9' and 'A', ignore it.
+	
+	# END OF PROGRAM #
 endProgram:
+	lw, $t5, result # Load the result number into $t5.
+	li $v0, 1 # System call to print a integer.
+	add $a0, $t5, $zero # Set a0 to the result.
+	syscall # Print integer.
 	li $v0, 10 # Exit program system call.
 	syscall
 	
