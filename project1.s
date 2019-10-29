@@ -19,7 +19,7 @@ main:
 	li $a1, 11 # Max number of characters to read.
 	syscall
 	
-	# LOOP OVER MESSAGE #
+	# MAIN LOOP (LOOP OVER MESSAGE) #
 	la $s0, userNumber # The address of the string entered.
 	add $t0, $t0, $zero # $t0 will iterate over the characters.
 messageLoop:
@@ -28,8 +28,22 @@ messageLoop:
 	beq $s2, 0, endProgram # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
+messageLoopEnd:
 	addi $t0, $t0, 1 # i++
 	j messageLoop # Check the next character.
+	
+	# CHECK IF CHAR IN RANGE #
+isCharInRange:
+	blt $s2, 48, messageLoopEnd # Value is less that '0', ignore it.
+	bgt $s2, 90, messageLoopEnd # Value is more than 'Z', ignore it.
+	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
+	sub $s2, $s2, 48 # The value is between '0' and '9', make it values 0-9.
+	j endCharCheck
+checkIfIgnore:
+	blt $s2, 65, messageLoopEnd # Value is between '9' and 'A', ignore it.
+	sub $s2, $s2, 55 # The value is between 'A' and 'Z', make it values 10-35.
+endCharCheck:
+	jr $ra
 	
 	# CONVERT TO LOWERCASE #
 toUppercase: # Convert characters to their lowercase version.
@@ -38,20 +52,6 @@ toUppercase: # Convert characters to their lowercase version.
 	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
 toUppercaseEnd:
 	jr $ra
-	
-	# CHECK IF CHAR IN RANGE #
-isCharInRange:
-	blt $s2, 48, endCharCheck # Value is less that '0', ignore it.
-	bgt $s2, 90, endCharCheck # Value is more than 'Z', ignore it.
-	bgt $s2, 57, checkIfIgnore # Value is more than '9', but it could still be a character.
-	sub $s2, $s2, 48 # The value is between '0' and '9', make it values 0-9.
-endCharCheck:
-	jr $ra
-	
-checkIfIgnore:
-	blt $s2, 65, endCharCheck # Value is between '9' and 'A', ignore it.
-	sub $s2, $s2, 55 # The value is between 'A' and 'Z', make it values 10-35.
-	j endCharCheck 
 	
 	# END OF PROGRAM #
 endProgram:
