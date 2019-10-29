@@ -24,16 +24,22 @@ main:
 messageLoop:
 	add $s1, $s0, $t0 # mesage[i]
 	lb $s2, 0($s1) # Load the character into $s2.
-	beq $s2, 0, exitProgram # End of string, exit out.
+	beq $s2, 0, endProgram # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase.
+	sub $s2, $s2, 16 # Make the char '0' the start of the table. 
+	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
 	addi $t0, $t0, 1 # i++
 	j messageLoop # Check the next character.
 	
 	# CONVERT TO LOWERCASE #
 toUppercase: # Convert characters to their lowercase version.
-	blt $s2, 'a', jr  # If less than A, return. No change needed.
-	bgt $s2, 'z', jr  # If more than Z, return. No change needed.
+	blt $s2, 'a', toUppercaseEnd  # If less than a, return. No change needed.
+	bgt $s2, 'z', toUppercaseEnd  # If more than z, return. No change needed.
 	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
+toUppercaseEnd:
+	jr $ra
+	# CHECK IF CHAR IN RANGE #
+isCharInRange:
 	jr $ra
 endProgram:
 	li $v0, 10 # Exit program system call.
