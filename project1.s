@@ -33,6 +33,7 @@ messageLoop:
 toUppercase: # Convert characters to their lowercase version.
 	blt $s2, 'a', jr  # If less than A, return. No change needed.
 	bgt $s2, 'z', jr  # If more than Z, return. No change needed.
+	sub $s2, $s2, 32  # Lowercase characters are offset from uppercase by 32.
 	jr $ra
 endProgram:
 	li $v0, 10 # Exit program system call.
