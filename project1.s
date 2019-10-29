@@ -1,13 +1,14 @@
 .data
 	base: .word 23
 	sr1: .asciiz "Enter 10 characters: "
+	newLine: .asciiz "\n"
 	userNumber: .space 11
-	result: .word 0 # The max number is 23*10, which is 230.
 
 .text # Instructions section, goes in text segment.
 
 main:
-	sw $zero, result # set result to 0.
+	add $t5, $t5, $zero # set t5 to zero.
+	lw $t6, base
 	# PRINT PROMPT #
     li $v0, 4 # System call to print a string.
 	la $a0, sr1 # Load string to be printed.
@@ -28,6 +29,8 @@ messageLoop:
 	beq $s2, 0, endProgram # End of string, exit out.
 	jal toUppercase # Convert the character to uppercase. 
 	jal isCharInRange # Is the character in our range? (0-9 and A-Z)
+	bgt $s2, $t6, messageLoopEnd # If the number is larger than our base, ignore it.
+	add $t5, $t5, $s2 # result += value.
 messageLoopEnd:
 	addi $t0, $t0, 1 # i++
 	j messageLoop # Check the next character.
@@ -55,13 +58,18 @@ toUppercaseEnd:
 	
 	# END OF PROGRAM #
 endProgram:
-	lw, $t5, result # Load the result number into $t5.
+	li $v0, 4 # Printing new line.
+	la $a0, newLine
+	syscall 
 	li $v0, 1 # System call to print a integer.
 	add $a0, $t5, $zero # Set a0 to the result.
 	syscall # Print integer.
 	li $v0, 10 # Exit program system call.
 	syscall
 	
+## GENERAL VARIABLES #
+## $t5 = Result.
+## $t6 = base.
 ## MESSAGE LOOP VARIABLES #
 ## $s0 = The base address of the string we're iterating over.
 ## St0 = The character index of the string.
