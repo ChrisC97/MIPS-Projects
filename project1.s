@@ -10,7 +10,7 @@ main:
 	add $t5, $t5, $zero # set t5 to zero.
 	lw $t6, base
 	# PRINT PROMPT #
-    li $v0, 4 # System call to print a string.
+	li $v0, 4 # System call to print a string.
 	la $a0, sr1 # Load string to be printed.
 	syscall # Print string.
 	
